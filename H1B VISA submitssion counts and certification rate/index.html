@@ -1,0 +1,580 @@
+<html>
+
+<head>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+
+  <style>
+  .axis {
+    stroke: #003300;
+  }
+
+  .title{
+    font-weight: bold;
+  }
+
+  .tick text{
+    font-size: 13px;
+  }
+
+  #layer1 text{
+    font-size:13px;
+  }
+  </style>
+
+</head>
+
+
+<body>
+<!--US Map graph-->
+  <div class="USmap">
+    <svg id="h1b-States" width=900 height=700>
+
+    </svg>
+
+    <script>
+      const svg_map=d3.select("#h1b-States");
+      const width_map=svg_map.attr("width");
+      const height_map=svg_map.attr("height");
+      const margin_map= {top:10, right:10, bottom:10, left:10};
+      const mapWidth=width_map-margin_map.left-margin_map.right;
+      const mapHeight=height_map-margin_map.top-margin_map.bottom;
+      var map2=svg_map.append("g").attr("tranform", "translate("+margin_map.left+","+margin_map.top+")");
+      var map=svg_map.append("g").attr("tranform", "translate("+margin_map.left+","+margin_map.top+")");
+
+      map2.append('text')
+         .attr("class", "title")
+         .text("Certified rate and the number of cases for H-1B visa")
+         .attr("x",200)
+         .attr("y",50)
+         .style("font-size","30px");
+
+      const requestData= async() => {
+        //credit: us.json and us-state-names adopted from class notes from Mike Bostock
+        //topography and draw map codes adopted from class notes
+        const usMap = await d3.json("datasets/us.json");
+        var states = topojson.feature(usMap, usMap.objects.states);
+        var projection = d3.geoAlbersUsa().fitSize([mapWidth, mapHeight], states);
+        var path= d3.geoPath().projection(projection);
+        const stateData = await d3.json("datasets/DataByState.json");
+        const stateIDs = await d3.tsv("datasets/us-state-names.tsv");
+        let stateCount = {};
+        let idToCode={};
+        //helper function for matching state name with state code
+        stateIDs.forEach(element =>{
+          idToCode[element.id]=element.code;
+        })
+        //helper function for fetching data for a certain state
+        function findStateData(state)
+        {
+          let result = {};
+          stateData.forEach(element =>{
+            if (element.STATE == state)
+            {
+                result = {"rate":element.RATE, "total":element.TOTAL};
+            };
+          })
+          return result
+        };
+        //new scales for certified rate
+        //greater rate -> bigger fill
+        var totalScale = d3.scaleLinear()
+          .domain([0, 100000])
+          .range([0.20 ,1.08]);
+        //more cases -> brown
+        //less cases -> blue
+        var rateHue = d3.scaleLinear()
+          .domain([0.83, 0.95])
+          .range(["orange", "limegreen"]);
+        //creating each state svg elements
+        map2.selectAll("path").data(states.features)
+                             .enter()
+                             .append("path")
+                             .attr("class", "state")
+                             .attr("d", path)
+                             .each(function(d, i){
+                               // individual state elements with data
+                               let stateCenterX = this.getBBox().x + this.getBBox().width/2;
+                               let stateCenterY = this.getBBox().y + this.getBBox().height/2;
+                               let stateScale = totalScale(findStateData(idToCode[d.id]).total);
+                               // for certain states, move to fit the actual location
+                               var offsetX = 0;
+                               var offsetY = 0;
+                               if (idToCode[d.id] == "FL" || idToCode[d.id] == "AK" )
+                               {
+                                 offsetX = 20;
+                                 offsetY = -20;
+                               }
+                               d3.select(this)
+                                .attr("fill", rateHue(findStateData(idToCode[d.id]).rate))
+                                //.attr("stroke-width", totalScale(findStateData(idToCode[d.id]).total))
+                                .attr("transform", ("scale(" + stateScale + ") " + "translate(" + ((stateCenterX * (1 - stateScale))/stateScale + offsetX) + ", " + ((stateCenterY * (1 - stateScale))/stateScale + offsetY) + ")"))
+                             });
+         map.selectAll("path").data(states.features)
+                              .enter()
+                              .append("path")
+                              .attr("class", "state")
+                              .attr("d", path)
+                              .attr("stroke", "white")
+                              .attr("stroke-linejoin", "round")
+                              .attr("stroke-width", 3)
+                              .attr("fill-opacity", 0.3)
+                              .each(function(d, i){
+                                // individual state elements with data
+                                let stateCenterX = this.getBBox().x + this.getBBox().width/2;
+                                let stateCenterY = this.getBBox().y + this.getBBox().height/2;
+                                let stateScale = totalScale(findStateData(idToCode[d.id]).total);
+                                d3.select(this)
+                                 .attr("fill", rateHue(findStateData(idToCode[d.id]).rate))
+                              });
+
+        }
+    requestData();
+    </script>
+    <!-- Legend Created with Inkscape and related packaages (http://www.inkscape.org/) -->
+    <svg
+       width="50mm"
+       height="100mm"
+       viewBox="0 0 207.8537 136.25566"
+       id="legend"
+       inkscape:version="0.92.1 r15371"
+       sodipodi:docname="legend.svg">
+      <defs
+         id="defs2">
+        <linearGradient
+           id="linearGradient4596"
+           inkscape:collect="always">
+          <stop
+             id="stop4592"
+             offset="0"
+             style="stop-color:#ff6600;stop-opacity:1" />
+          <stop
+             id="stop4594"
+             offset="1"
+             style="stop-color:#00d400;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient
+           inkscape:collect="always"
+           id="linearGradient4499">
+          <stop
+             style="stop-color:#ff7f2a;stop-opacity:1"
+             offset="0"
+             id="stop4495" />
+          <stop
+             style="stop-color:#00d400;stop-opacity:1"
+             offset="1"
+             id="stop4497" />
+        </linearGradient>
+        <linearGradient
+           inkscape:collect="always"
+           xlink:href="#linearGradient4499"
+           id="linearGradient4501"
+           x1="-177.64882"
+           y1="18.431547"
+           x2="1.5119019"
+           y2="18.431547"
+           gradientUnits="userSpaceOnUse"
+           gradientTransform="matrix(0.96766437,0,0,0.96766437,196.07987,-115.40473)" />
+        <linearGradient
+           inkscape:collect="always"
+           xlink:href="#linearGradient4596"
+           id="linearGradient4590"
+           x1="15.874987"
+           y1="56.985146"
+           x2="195.03571"
+           y2="56.985146"
+           gradientUnits="userSpaceOnUse"
+           gradientTransform="matrix(0.96766437,0,0,0.96766437,2.9617227,-27.623948)" />
+      </defs>
+      <sodipodi:namedview
+         id="base"
+         pagecolor="#ffffff"
+         bordercolor="#666666"
+         borderopacity="1.0"
+         inkscape:pageopacity="0.0"
+         inkscape:pageshadow="2"
+         inkscape:zoom="0.35"
+         inkscape:cx="501.90296"
+         inkscape:cy="213.41709"
+         inkscape:document-units="mm"
+         inkscape:current-layer="layer1"
+         showgrid="false"
+         inkscape:window-width="1600"
+         inkscape:window-height="847"
+         inkscape:window-x="-8"
+         inkscape:window-y="-8"
+         inkscape:window-maximized="1" />
+      <metadata
+         id="metadata5">
+        <rdf:RDF>
+          <cc:Work
+             rdf:about="">
+            <dc:format>image/svg+xml</dc:format>
+            <dc:type
+               rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+            <dc:title></dc:title>
+          </cc:Work>
+        </rdf:RDF>
+      </metadata>
+      <g
+         inkscape:label="Layer 1"
+         inkscape:groupmode="layer"
+         id="layer1"
+         transform="translate(-1.3863887,-8.568092)">
+        <rect
+           style="opacity:1;fill:url(#linearGradient4501);fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient4590);stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4485"
+           width="173.36745"
+           height="27.065804"
+           x="18.323381"
+           y="13.985643" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="6.6192417"
+           y="54.218601"
+           id="text4489"><tspan
+             sodipodi:role="line"
+             id="tspan4487"
+             x="6.6192417"
+             y="54.218601"
+             style="stroke-width:0.26458335">80%</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="174.86612"
+           y="53.48708"
+           id="text4493"><tspan
+             sodipodi:role="line"
+             id="tspan4491"
+             x="174.86612"
+             y="53.48708"
+             style="stroke-width:0.26458335">100%</tspan></text>
+        <rect
+           style="opacity:0.3;fill:#00d400;fill-opacity:1;fill-rule:nonzero;stroke:#00d400;stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4503"
+           width="49.328926"
+           height="46.816521"
+           x="26.00421"
+           y="69.274223" />
+        <rect
+           style="opacity:1;fill:#00d400;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4503-3"
+           width="13.883554"
+           height="13.215913"
+           x="43.312496"
+           y="86.220619" />
+        <rect
+           style="opacity:1;fill:#00d400;fill-opacity:1;fill-rule:nonzero;stroke:#00d400;stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4503-5"
+           width="49.328926"
+           height="46.816521"
+           x="138.48466"
+           y="69.274223" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="33.465591"
+           y="128.01465"
+           id="text4552"><tspan
+             sodipodi:role="line"
+             x="37.465591"
+             y="128.01465"
+             style="stroke-width:0.26458335"
+             id="tspan4554">1,000</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="141.21651"
+           y="128.0146"
+           id="text4560"><tspan
+             sodipodi:role="line"
+             id="tspan4558"
+             x="141.21651"
+             y="128.0146"
+             style="stroke-width:0.26458335">100,000</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="76.84404"
+           y="143.15683"
+           id="text4564"><tspan
+             sodipodi:role="line"
+             id="tspan4562"
+             x="76.84404"
+             y="143.15683"
+             style="stroke-width:0.26458335">Total Cases</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="71.109062"
+           y="54.666603"
+           id="text4564-1"><tspan
+             sodipodi:role="line"
+             id="tspan4562-4"
+             x="71.109062"
+             y="54.666603"
+             style="stroke-width:0.26458335">Certified Rate</tspan></text>
+        <rect
+           style="opacity:0.3;fill:#00d400;fill-opacity:1;fill-rule:nonzero;stroke:#00d400;stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4503-0"
+           width="49.328926"
+           height="46.816521"
+           x="82.499031"
+           y="69.274223" />
+        <rect
+           style="opacity:1;fill:#00d400;fill-opacity:1;fill-rule:nonzero;stroke:#00d400;stroke-width:0.26500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:13.26478672;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect4503-5-7"
+           width="31.293917"
+           height="29.695316"
+           x="91.682785"
+           y="77.761528" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:13px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
+           x="88.987083"
+           y="128.30775"
+           id="text4630"><tspan
+             sodipodi:role="line"
+             id="tspan4628"
+             x="88.987083"
+             y="128.30775"
+             style="stroke-width:0.26458335">50,000</tspan></text>
+      </g>
+    </svg>
+
+  </div>
+
+
+
+
+<!--Barchart-->
+
+  <script>
+
+  var svgtext1 = d3.select("body").append("svg")
+                    .attr("width", 2000)
+                    .attr("height", 100);
+      svgtext1.append("text")
+             .attr("class", "title")
+             .attr("x", 200)
+             .attr("y",23)
+             .attr("font-size", "32px")
+             .text("Certification (total > 1500) vs. Occupation");
+
+  //reference: https://alignedleft.com/tutorials/d3/making-a-bar-chart
+  var barmargin = {top: 20, right: 20, bottom: 300, left: 130},
+      barwidth = 1300 - barmargin.left - barmargin.right,
+      barheight = 1000 - barmargin.top - barmargin.bottom;
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", barwidth + barmargin.left + barmargin.right)
+      .attr("height", barheight + barmargin.top + barmargin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + barmargin.left + "," + barmargin.top + ")");
+
+  var cleanData=[];
+  var largeData=[];
+
+  d3.csv("datasets/certified_rate.csv").then(function(data){
+      cleanData=data;
+      cleanData.forEach(function(d, i){
+            d['all']= Number(d['total']);
+            d['certified']=Number(d["CERTIFIED"]);
+        });
+      cleanData.forEach(row=>{
+        if (row['total']>=1500){
+          largeData.push(row);
+        }
+      });
+
+      const minL=d3.min(largeData, d=>d['all']);
+      const maxL=d3.max(largeData, d=>d['all']);
+      const xScaleL = d3.scaleBand().range([0, barwidth]);
+      const yScaleL=d3.scaleLog().domain([minL-1000, maxL+50000]).range([barheight,0]);
+      var xAxisL = d3.axisBottom(xScaleL)
+      var yAxisL = d3.axisLeft(yScaleL);
+
+    xScaleL.domain(largeData.map(function(d) { return d['Occupation']; }));
+
+    
+    
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + barheight + ")")
+        .call(xAxisL)
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("font-size", "13px")
+        .attr("dx", "-.7em")
+        .attr("dy", "-.5em")
+        .attr("transform", "rotate(-60)" );
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxisL.tickFormat(d3.format("~s")))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("dy", ".7em")
+        .style("text-anchor", "end");
+
+    svg.selectAll("bar")
+        .data(largeData)
+        .enter().append("rect")
+        .attr("x", function(d) { return (xScaleL(d['Occupation'])+10); })
+        .attr("width", 15 )
+        .attr("y", function(d) { return yScaleL(d['all']); })
+        .attr("height", function(d) { return barheight - yScaleL( d['all'] ); })
+        .style("fill", 'orange');
+
+    svg.selectAll("bar")
+    .data(largeData)
+    .enter().append("rect")
+    .attr("x", function(d) { return (xScaleL(d['Occupation'])+10); })
+    .attr("width", 15 )
+    .attr("y", function(d) { return yScaleL(d['certified']); })
+    .attr("height", function(d) { return barheight - yScaleL( d['certified'] ); })
+    .style("fill", 'limegreen');
+
+    svg.append('rect')
+    .attr("x",700)
+    .attr("y",50)
+    .attr('width', 40)
+    .attr('height', 15)
+    .style('fill', "limegreen");
+
+    svg.append('rect')
+    .attr("x",700)
+    .attr("y",80)
+    .attr('width', 40)
+    .attr('height', 15)
+    .style('fill', "orange");
+
+    svg.append('text')
+    .text("Certified")
+    .attr("x",750)
+    .attr("y",60)
+    .style("font-size","20px");
+
+    svg.append('text')
+    .text("Not Certified")
+    .attr("x",750)
+    .attr("y",93)
+    .style("font-size","20px");
+
+  });
+
+
+  </script>
+
+  
+
+<script>
+
+  var svgtext2 = d3.select("body").append("svg")
+          .attr("width", 2000)
+          .attr("height", 100);
+      svgtext2.append("text")
+            .attr("class", "title")
+            .attr("x", 200)
+            .attr("y",50)
+            .attr("font-size", "32px")
+            .text("Certification (total < 1500) vs. Occupation");
+
+    //reference: https://alignedleft.com/tutorials/d3/making-a-bar-chart
+    var barmargin2 = {top: 20, right: 20, bottom: 300, left:130},
+        barwidth2 = 1300 - barmargin2.left - barmargin2.right,
+        barheight2 = 1000 - barmargin2.top - barmargin2.bottom;
+    var svg2 = d3.select("body").append("svg")
+              .attr("width", barwidth2 + barmargin2.left + barmargin2.right)
+              .attr("height", barheight2 + barmargin2.top + barmargin2.bottom)
+              .append("g")
+              .attr("transform", "translate(" + barmargin2.left + "," + barmargin2.top + ")");
+
+    var cleanData2=[];
+    var smallData=[];
+
+    d3.csv("datasets/certified_rate.csv").then(function(data){
+        cleanData2=data;
+        cleanData2.forEach(function(d, i){
+              d['all']= Number(d['total']);
+              d['certified']=Number(d["CERTIFIED"]);
+          });
+        cleanData2.forEach(row=>{
+          if (row['total']<1500){
+            smallData.push(row);
+          }
+        });
+
+        smallData=smallData.filter(d=>d['Occupation']!='HISTORIANS');
+        const minS=d3.min(smallData, d=>d['all']);
+        const maxS=d3.max(smallData, d=>d['all']);
+      //small data graph
+      const xScaleS = d3.scaleBand().range([0, barwidth2]);
+        const yScaleS=d3.scaleLog().domain([minS-10, maxS+700]).range([barheight2,0]);
+        var xAxisS = d3.axisBottom(xScaleS)
+        var yAxisS = d3.axisLeft(yScaleS);
+      xScaleS.domain(smallData.map(function(d) { return d['Occupation']; }));
+
+      
+      svg2.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + barheight2 + ")")
+          .call(xAxisS)
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("font-size", "13px")
+          .attr("dx", "-.7em")
+          .attr("dy", "-.5em")
+          .attr("transform", "rotate(-60)" );
+      svg2.append("g")
+          .attr("class", "y axis")
+          .call(yAxisS.tickFormat(d3.format(".0f")))
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("font-size", "20px")
+          .attr("dy", ".7em")
+          .style("text-anchor", "end");
+      svg2.selectAll("bar")
+          .data(smallData)
+          .enter().append("rect")
+          .attr("x", function(d) { return (xScaleS(d['Occupation'])+10); })
+          .attr("width", 15 )
+          .attr("y", function(d) { return yScaleS(d['all']); })
+          .attr("height", function(d) { return barheight2 - yScaleS( d['all'] ); })
+          .style("fill", 'orange');
+      svg2.selectAll("bar")
+          .data(smallData)
+          .enter().append("rect")
+          .attr("x", function(d) { return (xScaleS(d['Occupation'])+10); })
+          .attr("width", 15 )
+          .attr("y", function(d) { return yScaleS(d['certified']); })
+          .attr("height", function(d) { return barheight2 - yScaleS( d['certified'] ); })
+          .style("fill", 'limegreen');
+          svg2.append('rect')
+          .attr("x",800)
+          .attr("y",50)
+          .attr('width', 40)
+          .attr('height', 15)
+          .style('fill', "limegreen");
+          svg2.append('rect')
+          .attr("x",800)
+          .attr("y",80)
+          .attr('width', 40)
+          .attr('height', 15)
+          .style('fill', "orange");
+          svg2.append('text')
+          .text("Certified")
+          .attr("x",850)
+          .attr("y",60)
+          .style("font-size","20px");
+          svg2.append('text')
+          .text("Not Certified")
+          .attr("x",850)
+          .attr("y",93)
+          .style("font-size","20px");
+    });
+    </script>
+
+</body>
+</html>

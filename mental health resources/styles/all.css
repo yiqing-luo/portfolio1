@@ -1,0 +1,162 @@
+#all-wrap {
+    padding:0px 70px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    color: rgb(11, 39, 82);
+    text-shadow: 2px 2px 2px #000000;
+}
+
+h2 {
+    text-align: center;
+    font-size: 23.5px;
+    font-weight: normal;
+}
+
+h3 {
+    color:rgb(22, 81, 109);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-bottom:0px;
+}
+
+.section_title{
+    margin-top: 30px;
+}
+
+#foreword {
+    font-style: italic;
+    padding-bottom: 10px;
+    text-decoration: underline;
+    color: black;
+    text-shadow: 0.5px 0.5px 0.5px #000000;
+}
+
+hr {
+    background-color: cadetblue;
+    height:2px;
+    border:0;
+}
+
+p {
+    font-family: Georgia;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+header {
+    padding-top:20px;
+}
+
+.background {
+    background-image: url("../images/top-pic.jpg");
+    /*image source: https://picryl.com/media/south-on-the-quadrangle-cornell-university-ithaca-ny*/
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom:20px;
+}
+
+.source{
+    font-size: 12px;
+}
+
+#nav ul{
+    list-style-type: none;
+    display: flex;
+    padding: 0 25%;
+    justify-content: center;
+}
+
+#nav ul li{
+    flex-basis: 25%;
+    flex-grow:1;
+    text-align: center;
+    background-color: cadetblue;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+#nav ul li a{
+    text-decoration: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:white;
+    font-size: 18px;
+    display:inline-block;
+    width:100%;
+    height: 100%;
+    padding:10px 0;
+}
+
+.lists{
+    font-family: Georgia;
+    font-size: 18px;
+    line-height: 1.6;
+    list-style-type: circle;
+}
+
+.lists_2{
+    list-style-type: disc;
+    font-family: Georgia;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.red {
+    color:red;
+}
+
+#footer{
+    margin-top:40px;
+    background-color: cadetblue;
+    text-align: center;
+}
+
+#footer a{
+    color:black;
+}
+
+.optional{
+    margin-left:10px;
+    color:rgb(22, 81, 109);
+    font-size: 16px;
+}
+
+.required{
+    color:red;
+}
+
+.hidden{
+    display:none;
+}
+
+.form_error{
+    color:red;
+    font-size:16px;
+    margin-top:0px;
+    margin-left:15px;
+}
+
+form p{
+    margin-bottom:0;
+}
+
+
+#submit_button{
+    font-size:16px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin:20px 0px 10px 10px;
+    background-color: cadetblue;
+    color:white;
+    border-radius: 5px;
+    cursor: pointer;
+    border:0;
+    padding:5px 10px;
+
+
+}
+
+#status{
+    margin-left:10px;
+}

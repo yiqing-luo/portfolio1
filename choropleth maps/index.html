@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v5.min.js"></script> 
+        <script src="https://d3js.org/topojson.v2.min.js"></script>
+        <style>
+            .country {
+                fill:lightgrey;
+                stroke:none;
+            }
+
+            .outline{
+                stroke:black;
+                stroke-width: 1px;
+                fill:none;
+            }
+
+            .graticule{
+                fill: none;
+                stroke:lightgrey;
+            }
+
+            .district_path{
+                stroke:white;
+                stroke-width: 1px;
+            }
+
+            
+        </style>
+    </head>
+
+    <body>
+        <p id="p1"><strong>Problem 1: </strong></p>
+
+        <svg id="mercator" width="600" height="400">
+
+        </svg>
+
+        <svg id="equalEarth" width="600" height="400">
+
+        </svg>
+
+        <svg id="conicEqualArea" width="600" height="400">
+
+        </svg>
+
+        <script id="p1code">
+
+            const svg1 = d3.select("#mercator");
+            const width1= svg1.attr("width");
+            const height1= svg1.attr("height");
+            const margin1={top:10, right:10, bottom:10, left:10};
+            const mapWidth= width1 - margin1.left - margin1.right;
+            const mapHeight= height1 - margin1.top - margin1.bottom;
+            const map = svg1.append("g")
+                           .attr("transform", "translate("+margin1.left+","+margin1.top+")");
+
+
+
+            const requestData = async () => {
+                const world = await d3.json("world_110m.json");
+                
+                
+                var countries = topojson.feature(world, world.objects.countries);
+                var countriesMesh = topojson.mesh(world, world.objects.countries);
+                
+
+                var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], countries);
+                var pathGen = d3.geoPath().projection(projection);
+
+                map.append("path") // Add a single path to your SVG canvas 
+                   .attr("class", "graticule")// with the class "graticule" to use our CSS style 
+                   .attr("d", pathGen(d3.geoGraticule10())); 
+                   // and call your path generator on the output of d3’s 
+                   // built-in d3.geoGraticule10 function to set "d"
+                
+                map.selectAll("path").data(countries.features).enter()
+                   .append("path")
+                   .attr("class", "country")
+                   .attr("d", pathGen);
+                
+                map.append("path")
+                   .datum(countriesMesh)
+                   .attr("class", "outline")
+                   .attr("d", pathGen);
+            
+            //equalEarth Code
+                const svg2= d3.select("#equalEarth")
+                const width2= svg2.attr("width");
+                const height2= svg2.attr("height");
+                const margin2={top:10, right:10, bottom:10, left:10};
+                const mapWidth2= width2 - margin2.left - margin2.right;
+                const mapHeight2= height2 - margin2.top - margin2.bottom;
+                const map2 = svg2.append("g")
+                            .attr("transform", "translate("+margin2.left+","+margin2.top+")");
+
+                var projection2 = d3.geoEqualEarth().fitSize([mapWidth2, mapHeight2], countries);
+                var pathGen2 = d3.geoPath().projection(projection2);
+
+                map2.append("path") 
+                   .attr("class", "graticule")
+                   .attr("d", pathGen2(d3.geoGraticule10())); 
+
+
+                map2.selectAll("path").data(countries.features).enter()
+                   .append("path")
+                   .attr("class", "country")
+                   .attr("d", pathGen2);
+                
+                map2.append("path")
+                   .datum(countriesMesh)
+                   .attr("class", "outline")
+                   .attr("d", pathGen2);
+            
+              // conic equal area projection
+                const svg3= d3.select("#conicEqualArea")
+                const width3= svg3.attr("width");
+                const height3= svg3.attr("height");
+                const margin3={top:10, right:10, bottom:10, left:10};
+                const mapWidth3= width3 - margin3.left - margin3.right;
+                const mapHeight3= height3 - margin3.top - margin3.bottom;
+                const map3 = svg3.append("g")
+                            .attr("transform", "translate("+margin3.left+","+margin3.top+")");
+
+                var projection3 = d3.geoConicEqualArea().fitSize([mapWidth3, mapHeight3], countries);
+                var pathGen3 = d3.geoPath().projection(projection3);
+
+                map3.append("path") 
+                   .attr("class", "graticule")
+                   .attr("d", pathGen3(d3.geoGraticule10())); 
+
+
+                map3.selectAll("path").data(countries.features).enter()
+                   .append("path")
+                   .attr("class", "country")
+                   .attr("d", pathGen3);
+                
+                map3.append("path")
+                   .datum(countriesMesh)
+                   .attr("class", "outline")
+                   .attr("d", pathGen3);
+
+
+            };
+
+            requestData();
+           
+        </script>
+        <p><strong>D: Mercator Projection</strong></p>
+        <p>Advantage: The angles and shapes are preserved.</p>
+        <p>Disadvantage: Artartica looks exceptionally large due to the scaling. Size is distorted.</p>
+        <p>It is suitable for sailing on ocean, where the directions on the map can be eaisly transferred into reality.</p>
+
+        <p><strong>E: EqualEarth Projection</strong></p>
+        <p>Advantage: It transforms the round world into 2-D with curved graticules, the relative area on the map is the same as that on Earth.</p>
+        <p>Disadvantage: Places close to the pole are hard to see their shapes and sizes.</p>
+        <p>It is suitable for classroom settings, to introduce students to the concept of a round world and help them recognizing relative sizes of the main continents. </p>
+
+        <p><strong>F: Conic Equal Area Projection</strong></p>
+        <p>Advantage: Distortions are minimized between two parallels. Distances are true.</p>
+        <p>Disadvantage: The conic shape is not as intuitive as a flat elliptical/rectangular surface. Shapes are distorted away from standard parallels.</p>
+        <p>It is best used for middle latitudes, observing regions that are wide and not very tall. </p>
+
+        <br/>
+
+        <p id="p2"><strong>Problem2: </strong></p>
+
+        <svg id="nyElection" width=800 height=700>
+
+        </svg>
+
+        <script>
+            const svg4= d3.select("#nyElection")
+            const width4= svg4.attr("width");
+            const height4= svg4.attr("height");
+            const margin4={top:10, right:10, bottom:10, left:10};
+            const mapWidth4= width4 - margin4.left - margin4.right;
+            const mapHeight4= height4 - margin4.top - margin4.bottom;
+            const map4 = svg4.append("g")
+                        .attr("transform", "translate("+margin4.left+","+margin4.top+")");
+
+            const requestData2 = async () => {
+            const nyd = await d3.json("new_york_districts.json");
+
+            var districts = topojson.feature(nyd, nyd.objects.districts);
+            var projection4 = d3.geoMercator().fitSize([mapWidth4, mapHeight4], districts);
+            var pathGen4 = d3.geoPath().projection(projection4);
+
+            const colorScale = d3.scaleLinear().domain([30, 50, 70]).range(["red", "lightgrey", "blue"]).clamp(true).interpolate(d3.interpolateHcl);
+
+            map4.selectAll("path").data(districts.features)
+                .enter()
+                .append("path")
+                .attr("class", "district_path")
+                .attr("d", pathGen4)
+
+            map4.selectAll(".district_path")
+                .style("fill", d=>colorScale(d.properties.percent_clinton));
+
+            //[longitude, latitude] => x,y    
+            var Ithaca = projection4([-76.5,  42.443333]);
+
+            map4.append("circle")
+                .attr("cx", Ithaca[0])
+                .attr("cy", Ithaca[1])
+                .attr("r", 10)
+                .style("fill", "white");
+
+
+
+
+
+
+
+            };
+
+            requestData2();
+            
+        </script>
+
+
+    </body>
+</html>

@@ -1,0 +1,42 @@
+---
+title: "5100Project1"
+author: "Group"
+date: "March 1, 2019"
+output: html_document
+---
+
+selecting rows
+```{r}
+data = read.csv("h1bdata.csv")
+data.simple = subset(data, select=c(CASE_STATUS, WORKSITE_STATE))
+```
+
+```{r}
+state.data = data.frame((matrix(ncol = 5, nrow = 55)))
+state.data[is.na(state.data)] <- 0
+colnames(state.data) <- c("STATE", "CERTIFIED", "CERTIFIEDWITHDRAWN", "DENIED", "WITHDRAWN")
+
+state.data$STATE = unique(data.simple$WORKSITE_STATE)
+
+row.names(state.data) = state.data$STATE
+
+state.list = state.data$STATE
+status.list = c("CERTIFIED", "CERTIFIEDWITHDRAWN", "WITHDRAWN", "DENIED")
+
+state.data["NY", "CERTIFIED"] = nrow(subset(data.simple, WORKSITE_STATE == "NY" & CASE_STATUS == "CERTIFIED"))
+
+for (i in 1:55)
+{
+  for (j in 1:4)
+  {
+    state.name = toString(state.list[i])
+    state.data[state.name, status.list[j]] = nrow(subset(data.simple, WORKSITE_STATE == state.name & CASE_STATUS == status.list[j])) 
+  }
+}
+
+state.data$TOTAL = state.data$CERTIFIED + state.data$CERTIFIEDWITHDRAWN + state.data$DENIED + state.data$WITHDRAWN
+```
+output
+```{r}
+write.csv(state.data, file = "DataByState.csv")
+```

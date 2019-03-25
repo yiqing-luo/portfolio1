@@ -1,0 +1,305 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+
+
+    <p id="p1"><strong>Problem 1: </strong></p><br/>
+    <ul>
+        <li>A: It is a sequential scale. It is effective because the two color hues are similar, and by using the difference in saturation and luminance people can easily tell that the color changes from "dark" to "light", hence there should also be a change in value.</li>
+        <li>B: No, it is not effective because as the saturation diminishes there exist two greyish areas between yellow and blue, and between red and blue. Thus it is hard to tell if the values are positive or negative in these areas.</li>
+        <li>C: People who have less or no sensitivity for color red (Protanomaly and Protanopia), and people who have trouble distiguishing green (Deuteranomaly and Deuteranopia) will find this scale hard to interpret. People who are Monochromacy-blind or Monochromacy-weak have trouble distinguishing any color.<br/>
+            Online testing website: https://www.canvasflip.com/color-blind.php </li>
+        <li>D: The problem of this rainbow scale is that different luminance in the color make some sections stand out more than the others. Also, humans have different levels of sensitivity for green and blue, which makes it harder to tell the numeric changes.</li>
+    </ul>
+
+    <p id="p2"><strong>Problem 2: </strong></p><br/>
+    <svg id="aq2" height="200" width="300">
+
+    </svg>
+
+    <script id="p2script">
+
+        aqData=[[10, 9.14], [8,8.14], [13,8.74], [9,8.77], [11,9.26], 
+        [14,8.1], [6, 6.13], [4,3.1], [12,9.13], [7,7.26], [5,4.74]];
+
+        let svg= d3.select("svg#aq2");
+        let width=svg.attr("width");
+        let height=svg.attr("height");
+
+        //divide the svg window(range) into domain
+        let margin={"top":3, "right":10, "bottom":17, "left":20};
+        let xScale= d3.scaleLinear().domain([0,15]).range([0, width-margin.left-margin.right]);
+        let yScale= d3.scaleLinear().domain([10,0]).range([0, height-margin.top-margin.bottom]);
+
+        
+
+        //draw y axis
+        let yAxis=d3.axisLeft(yScale);
+        svg.append("g")
+        .attr("transform", "translate("+margin.left+","+margin.top+")")
+        .call(yAxis.ticks(2));
+
+        //draw x axis
+        let xAxis=d3.axisBottom(xScale);
+        svg.append("g")
+        .attr("transform", "translate("+margin.left+","+(height-margin.bottom)+")")
+        .call(xAxis.ticks(3));
+
+        //draw vertical lines for the graph
+        for (let i=0; i<=15; i++) {
+            svg.append("line")
+            .attr("x1", xScale(i))
+            .attr("x2", xScale(i))
+            .attr("y1", 0)
+            .attr("y2", (height-margin.bottom-margin.top))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+(margin.left+0.5)+","+(margin.top)+")");
+        };
+
+        //draw horizontal lines for the graph
+        for (let i=0; i<=10; i++) {
+            svg.append("line")
+            .attr("x1", 0)
+            .attr("x2", (width-margin.left-margin.right))
+            .attr("y1", yScale(i))
+            .attr("y2", yScale(i))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+(margin.left)+","+(margin.top+0.5)+")");
+        };
+
+        //draw circles
+        aqData.forEach(function(d,i){
+            svg.append("circle")
+            .attr("cx", xScale(d[0]))
+            .attr("cy", yScale(d[1]))
+            .attr("r", 3)
+            .style("fill", "rgb(38, 76, 114)")
+            .attr("transform", "translate("+(margin.left+0.5)+","+(margin.top+0.5)+")")
+            //change circle color to red
+            .on("click", function(){
+                d3.select(this).style("fill", "red");
+            });
+        });
+    </script>
+
+    <p><strong>Problem 3: </strong></p><br/>
+
+    <svg id="diamondSale" height=400 width=400>
+
+    </svg>
+
+    <br/>
+    <br/>
+
+    <svg id="colorRating" height=400 width=400>
+
+    </svg>
+
+    <br/>
+    <br/>
+
+    <svg id="pricePerCarat" height=400 width=400>
+
+    </svg>
+
+    <p><strong>E </strong>The chart is misleading because as the rating becomes closer to 1 (higher quality), the possible highest price per carat gets larger, but it does not mean that average price per carat is getting higher.</p>
+    <br/>
+    <br/>
+
+    <script>
+        var diamondData=[];
+        //get data
+        d3.json("diamonds.json").then(function(data){
+            diamondData=data;
+        
+
+        let svg2= d3.select("svg#diamondSale");
+        let padding={"top":5, "right":5, "bottom":25, "left":40};
+        let width2=svg2.attr("width");
+        let height2=svg2.attr("height");
+
+        //scales
+        const maxCarat= d3.max(diamondData, d => d['carat']);
+        const maxPrice= d3.max(diamondData, d => d['price']);
+        const xTick=Math.ceil(maxCarat);
+        const yTick=Math.ceil(maxPrice/1000);
+        let xScale2=d3.scaleLinear().domain([0, maxCarat]).range([0, (width2-padding.right-padding.left)]);
+        let yScale2=d3.scaleLinear().domain([maxPrice,0]).range([0, (height2-padding.bottom-padding.top)]);
+
+        
+        //draw x-axis
+        let xAxis2=d3.axisBottom(xScale2);
+        svg2.append("g")
+        .attr("transform", "translate("+padding.left+","+(height2-padding.bottom+")"))
+        .call(xAxis2.ticks(xTick).tickSizeOuter(0));
+
+        //draw y-axis
+        let yAxis2=d3.axisLeft(yScale2).tickSizeOuter(0);
+        svg2.append("g")
+            .attr("transform", "translate("+padding.left+","+padding.top+")")
+            .call(yAxis2.ticks(yTick, d3.format("$~s")));
+
+        //draw vertical lines
+        for (let i=1; i<xTick; i++) {
+            svg2.append("line")
+            .attr("x1", xScale2(i))
+            .attr("x2", xScale2(i))
+            .attr("y1", 0)
+            .attr("y2", (height2-padding.bottom-padding.top))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+(padding.left+0.5)+","+padding.top+")");
+        };
+
+        //draw horizontal lines
+        for (let i=1; i<yTick; i++) {
+            svg2.append("line")
+            .attr("x1", 0)
+            .attr("x2", (width2-padding.right-padding.left))
+            .attr("y1", yScale2((i*1000)))
+            .attr("y2", yScale2((i*1000)))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+padding.left+","+(padding.top+0.5)+")");
+
+        };
+        
+        //draw circle
+        diamondData.forEach(function(d,i){
+            svg2.append("circle")
+                .attr("cx", Math.floor(xScale2(d['carat'])))
+                .attr("cy", Math.floor(yScale2(d['price'])))
+                .attr("r", 3)
+                .attr("opacity", 0.4)
+                .style("fill", "darkblue")
+                .attr("transform","translate("+(padding.left+0.5)+","+(padding.top+0.5)+")");
+
+        });
+
+       
+
+        //color rating graph
+        let svg3= d3.select("svg#colorRating");
+        let padding3={"top":5, "right":5, "bottom":25, "left":40};
+        let width3=svg3.attr("width");
+        let height3=svg3.attr("height");
+
+        //scales
+        const maxRating= d3.max(diamondData, d => d['color_rating']);
+        let xScale3=d3.scaleLinear().domain([0, 8]).range([0, (width3-padding3.right-padding3.left)]);
+        let yScale3=d3.scaleLinear().domain([maxPrice,0]).range([0, (height3-padding3.bottom-padding3.top)]);
+
+        
+        //draw x-axis
+        let xAxis3=d3.axisBottom(xScale3)
+        svg3.append("g")
+            .attr("transform", "translate("+padding3.left+","+(height3-padding3.bottom+")"))
+            .call(xAxis3);
+
+        //draw y-axis
+        let yAxis3=d3.axisLeft(yScale3).tickSizeOuter(0);
+        svg3.append("g")
+            .attr("transform", "translate("+padding3.left+","+padding3.top+")")
+            .call(yAxis3.ticks(yTick, d3.format("$~s")));
+
+        //draw vertical lines
+        for (let j=1; j<=7; j++) {
+            svg3.append("line")
+                .attr("x1", xScale3(j))
+                .attr("x2", xScale3(j))
+                .attr("y1", 0)
+                .attr("y2", (height3-padding3.bottom-padding3.top))
+                .style("stroke", "#B2B2B2")
+                .attr("transform", "translate("+(padding3.left+0.5)+","+padding3.top+")");
+        };
+
+        //draw horizontal lines
+        for (let j=1; j<yTick; j++) {
+            svg3.append("line")
+            .attr("x1", 0)
+            .attr("x2", (width3-padding3.right-padding3.left))
+            .attr("y1", yScale3((j*1000)))
+            .attr("y2", yScale3((j*1000)))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+padding3.left+","+(padding3.top+0.5)+")");
+
+        };
+        
+        //draw circle
+        diamondData.forEach(function(d,i){
+            svg3.append("circle")
+                .attr("cx", Math.floor(xScale3(d['color_rating'])+(Math.random()*10-5)))
+                .attr("cy", Math.floor(yScale3(d['price'])))
+                .attr("r", 3)
+                .attr("opacity", 0.3)
+                .style("fill", "darkgreen")
+                .attr("transform","translate("+(padding3.left+0.5)+","+(padding3.top+0.5)+")");
+
+        });
+
+
+        //third svg with price per carat
+        let svg4= d3.select("svg#pricePerCarat");
+        let padding4={"top":5, "right":5, "bottom":25, "left":40};
+        let width4=svg4.attr("width");
+        let height4=svg4.attr("height");
+
+        //scales
+        let xScale4=d3.scaleLinear().domain([0, 8]).range([0, (width4-padding4.right-padding4.left)]);
+        const maxPPC= d3.max(diamondData, d => (d['price']/d['carat']));
+        let yScale4=d3.scaleLinear().domain([maxPPC,0]).range([0, (height3-padding3.bottom-padding3.top)]);
+        const yTick4= Math.floor(maxPPC/1000);
+        
+
+        
+        //draw x-axis
+        let xAxis4=d3.axisBottom(xScale4)
+        svg4.append("g")
+            .attr("transform", "translate("+padding4.left+","+(height4-padding4.bottom+")"))
+            .call(xAxis4);
+
+        //draw y-axis
+        let yAxis4=d3.axisLeft(yScale4).tickSizeOuter(0);
+        svg4.append("g")
+            .attr("transform", "translate("+padding4.left+","+padding4.top+")")
+            .call(yAxis4.ticks(yTick4, d3.format("$~s")));
+
+        //draw vertical lines
+        for (let j=1; j<=7; j++) {
+            svg4.append("line")
+                .attr("x1", xScale4(j))
+                .attr("x2", xScale4(j))
+                .attr("y1", 0)
+                .attr("y2", (height4-padding4.bottom-padding4.top))
+                .style("stroke", "#B2B2B2")
+                .attr("transform", "translate("+(padding4.left+0.5)+","+padding4.top+")");
+        };
+
+        //draw horizontal lines
+        for (let j=1; j<=yTick4; j++) {
+            svg4.append("line")
+            .attr("x1", 0)
+            .attr("x2", (width4-padding4.right-padding4.left))
+            .attr("y1", yScale4((j*1000)))
+            .attr("y2", yScale4((j*1000)))
+            .style("stroke", "#B2B2B2")
+            .attr("transform", "translate("+padding4.left+","+(padding4.top+0.5)+")");
+
+        };
+        
+        //draw circle
+        diamondData.forEach(function(d,i){
+            svg4.append("circle")
+                .attr("cx", Math.floor(xScale4(d['color_rating'])+(Math.random()*10-5)))
+                .attr("cy", Math.floor(yScale4((d['price']/d['carat']))))
+                .attr("r", 3)
+                .attr("opacity", 0.3)
+                .style("fill", "darkred")
+                .attr("transform","translate("+(padding4.left+0.5)+","+(padding4.top+0.5)+")");
+        });
+
+
+        }).catch(e=> {console.log("Error: "+e.message);});
+
+    </script>
+
+</html>

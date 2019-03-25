@@ -1,0 +1,364 @@
+<head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+<style>
+    .verticalGrid line{
+        stroke: lightgray;
+    }
+
+    .horiGrid line{
+        stroke:lightgrey;
+    }
+
+    .verticalGrid .domain{
+        stroke: none;
+    }
+   
+
+    .horiGrid .domain{
+        stroke:none;
+    }
+
+    #projectile text{
+        font-size: 13px;
+    }
+
+   
+
+</style>
+
+<p id="p1"><strong>Problem 1: </strong></p>
+<p><strong>A. </strong></p>
+<p>Correct data: 
+    A. Need to cast year of release, worldwide gross and IMDB rating into numbers.
+    B. Strip the "," and "$" in worldwide gross. </p>
+<p> Filter out data:
+    A. The year of release needs to be between 1975 and 2018.
+    B. The ranking number is between 1 and 10.
+    C. The movie needs to have a valid genre.
+</p>
+<p><strong>B. </strong></p>
+<p>Rationale:</p>
+<p>1. For x-axis I hard-coded year 2018 at the end because our data ranges from 1975 to 2018 and I don't want to create confusion by adding later years.</p>
+<p>2. I used log scale for worldwide gross, the y-axis, because the maximum and minimum data are too far apart to fit in a equally divided linear scale.</p>
+<p>3. I chose a color scheme that has distinct colors because each genre is different and has no connection with one another.</p>
+<p>4. I made the radius of circles small so that they don't overlap with each other as much and cloack the gridlines.</p>
+
+<p><strong>D. </strong></p>
+<p>Benefits: Users can know what the movie is when they hover over a circle, instead of displaying name above every circle.</p>
+<p>Deficiency: Using movie title as id does not work when the movie starts with number. It is better to use unique movie id from IMDB, or change numbers into unicode or something else when creating id. The movie titles with symbol "&" cannot become ids, so I changed "&" into "and". The chart is also confusing in that some circles are blocked by others and hard to select.</p>
+
+<svg id="blockbuster" height="500" width="800">
+
+</svg>
+
+<script id="p1code">
+    let svg1=d3.select("svg#blockbuster");
+    let width1= svg1.attr("width");
+    let height1= svg1.attr("height");
+
+    let margin1={top:30, right:40, bottom:50, left:80};
+    let graphW1= width1-margin1.right-margin1.left;
+    let graphH1= height1-margin1.top-margin1.bottom;
+
+    var blockbusterData=[];
+
+    d3.json("blockbusters.json").then(function(data){
+        
+        blockbusterData=data;
+ 
+        //clean data
+        blockbusterData.forEach(function(d, i){
+            d['yr']= Number(d["year"]);
+            d['boxOffice']=Number(d["worldwide_gross"].replace(/[$,]/g, ""));
+            d['imdb']=Number(d["imdb_rating"]);
+        });
+
+        blockbusterData=blockbusterData.filter(d=> d['yr']>=1975 && d['yr']<=2018);
+        blockbusterData=blockbusterData.filter(d=> d["rank_in_year"]>=1 && d["rank_in_year"]<=10);
+        blockbusterData=blockbusterData.filter(d=> d["Main_Genre"] != "N/A" && d["Main_Genre"]!="NA");
+
+        //scales
+        const yearScale= d3.scaleLinear().domain([1975, 2018]).range([0, graphW1]);
+        
+        const minDollar= d3.min(blockbusterData, d=>d['boxOffice']);
+        const maxDollar= d3.max(blockbusterData, d=>d['boxOffice']);
+        const dollarScale=d3.scaleLog().domain([minDollar, maxDollar]).range([graphH1,0]);
+
+        const minimdb= d3.min(blockbusterData, d=>d['imdb']);
+        const maximdb= d3.max(blockbusterData, d=>d['imdb']);
+        const imdbScale=d3.scaleLinear().domain([minimdb, maximdb]).range([3, 10]);
+
+
+        //color
+        const genreScale=d3.scaleOrdinal(d3.schemeSet1);
+
+
+        let years=[1975,1977,1979,1981,1983,1985,1987,1989,1991,1993,1995,1997,1999,2001,2003,2005,2007,2009,2011,2013,2015,2018];
+
+        //x axis
+        let bottomAxis1= d3.axisBottom(yearScale);
+        svg1.append("g").attr("class", "x axis")
+            .attr("transform", "translate("+(margin1.left+15)+","+(margin1.top+graphH1)+")")
+            .call(bottomAxis1.tickFormat(d3.format("d")).tickValues(years));
+        
+        //y axis
+        let leftAxis1= d3.axisLeft(dollarScale);
+         svg1.append("g").attr("class", "y axis")
+             .attr("transform", "translate("+margin1.left+","+(margin1.top-10)+")")
+             .call(leftAxis1.tickFormat(d3.format("$~s")));
+        
+        
+        
+        //x gridlines
+        let verticalGrid1 = d3.axisBottom(yearScale).tickSize(-graphH1).tickFormat("").tickValues(years);
+        svg1.append("g").attr("class", "verticalGrid")
+            .attr("transform","translate("+ (margin1.left+15) +","+ (margin1.top + graphH1) +")")
+            .call(verticalGrid1);
+        
+        //y gridlines
+        let horiGrid1 = d3.axisLeft(dollarScale).tickSize(-graphW1-15).tickFormat("");
+        svg1.append("g").attr("class", "horiGrid")
+            .attr("transform","translate("+ margin1.left +","+ (margin1.top-10) +")")
+            .call(horiGrid1);
+        
+        //draw circles
+        let points = svg1.append("g")
+                         .attr("transform","translate("+(margin1.left+15)+","+(margin1.top-10)+")");
+
+        blockbusterData.forEach( (d, i) => {
+
+            let release = yearScale(d['yr']);
+            let dollar= dollarScale(d['boxOffice']);
+            let score = imdbScale(d['imdb']);
+            let genre = genreScale(d["Main_Genre"]);
+
+            let circles = points.append("circle")
+                               .attr("cx", release)
+                               .attr("cy", dollar)
+                               .attr("r", score)
+                               .style("fill", genre)
+                               .attr("opacity", 0.8)
+                            
+        
+        //mouseover
+        circles.on("mouseover", function() {
+            d3.select(this)
+              .transition().duration(200)
+              .attr("r",score*2)
+            
+            points.append("text")
+                  .attr("id", d["title"].replace(/[ _\-,.:'#!\?"]/g,"").replace(/&/g, "and"))  
+                  .attr("x", release-20 )
+                  .attr("y", dollar-10 )
+                  .text(d["title"]);
+          });
+
+          circles.on("mouseout", function() {
+            d3.select(this)
+              .transition().duration(200)
+              .attr("r",score)
+            d3.select("#" + d["title"].replace(/[ _\-,.:'#!\?"]/g,"").replace(/&/g, "and")).remove();
+          });
+
+
+        });
+        
+
+    });
+</script>
+
+<p id="p2"><strong>Problem 2: </strong></p>
+<p><strong>A. </strong></p>
+
+<svg id="projectile" height="400" width="400">
+
+</svg>
+
+<script id="p2code">
+    let svg2=d3.select("svg#projectile");
+    let width2= svg2.attr("width");
+    let height2= svg2.attr("height");
+
+    let margin2={top:10, right:10, bottom:30, left:10};
+    let graphW2=width2-margin2.left-margin2.right;
+    let graphH2=height2-margin2.top-margin2.bottom;
+
+    //xy scale
+    const xScale= d3.scaleLinear().domain([0, graphW2/5]).range([0, graphW2]);
+    const yScale= d3.scaleLinear().domain([0, graphH2/5]).range([graphH2, 0]);
+
+
+    //ground line
+    svg2.append("line")
+        .attr("x1", xScale(0))
+        .attr("x2", xScale(graphW2/5))
+        .attr("y1", yScale(0))
+        .attr("y2", yScale(0))
+        .style("stroke", "black")
+        .attr("transform","translate("+(margin2.left)+","+(margin1.top)+")");
+
+    
+    function trajectory(initialVelocity, angle){
+        //need to convert degree to radian
+        var ballData=[{"ground":0, "x":0, "y":0, "xVelocity": initialVelocity*Math.cos((angle*Math.PI/180)),"yVelocity": initialVelocity*Math.sin((angle*Math.PI/180)), "xAcceleration":0, "yAcceleration": (-3.71/10)}];
+        while (true){
+            let last=ballData.length-1
+            if (ballData[last]["x"]<=17 && ballData[last]["x"]>=13){
+                ballData[last]["ground"]=20
+                if (ballData[last]["y"]<=ballData[last]["ground"]){
+                    return ballData
+                } else{
+                    oldBall=ballData[last]
+                    newBall={}
+                    newBall["ground"]=20
+                    newBall["xAcceleration"]=0
+                    newBall["yAcceleration"]=-3.71/10
+                    newBall["xVelocity"]=oldBall["xVelocity"]+newBall["xAcceleration"]
+                    newBall["yVelocity"]=oldBall["yVelocity"]+newBall["yAcceleration"]
+                    newBall["x"]=oldBall["x"]+0.1*newBall["xVelocity"]
+                    newBall["y"]=oldBall["y"]+0.1*newBall["yVelocity"]
+                    ballData.push(newBall);
+                }
+            } else{
+                ballData[last]["ground"]=0
+                if (ballData[last]["y"]<=ballData[last]["ground"] && ballData.length>1){
+                    return ballData
+                } else{
+                    oldBall=ballData[last]
+                    newBall={}
+                    newBall["ground"]=0
+                    newBall["xAcceleration"]=0
+                    newBall["yAcceleration"]=-3.71/10
+                    newBall["xVelocity"]=oldBall["xVelocity"]+newBall["xAcceleration"]
+                    newBall["yVelocity"]=oldBall["yVelocity"]+newBall["yAcceleration"]
+                    newBall["x"]=oldBall["x"]+0.1*newBall["xVelocity"]
+                    newBall["y"]=oldBall["y"]+0.1*newBall["yVelocity"]
+                    ballData.push(newBall);
+                }
+            }
+        }
+    }
+
+    //display data
+    let track = svg2.append("g")
+                     .attr("transform","translate("+(margin2.left)+","+(margin1.top)+")");
+
+    function plotTrajectory(array, color){
+
+        let impact=array[array.length-1]
+
+        let line=d3.line().x(d=>xScale(d["x"])).y(d=>yScale(d["y"]));
+        
+        function textGen(pointOfImpact){
+            if (impact["x"]>=25 && impact["x"]<=35){
+                var target="HIT";
+            } else{
+                var target="MISS";
+            }
+            var time=Math.floor(0.1*(array.length-1))
+            var dist=impact["x"].toFixed(1)
+            return (target+", "+time+"s, "+dist+"m")
+        }
+
+        track.append("path")
+            .attr("d", line(array))
+            .attr("opacity", 0.25)
+            .style("stroke", color)
+            .style("stroke-width", 5)
+            .style("fill","transparent");
+        
+        track.append("text")
+             .attr("x", xScale(impact["x"]) )
+             .attr("y", yScale(impact["y"]+3) )
+             .text(textGen(impact));
+    }
+
+    svg2.append(plotTrajectory(trajectory(14, 75), "#0000FF"));
+    svg2.append(plotTrajectory(trajectory(19, 75), "#0000FF"));
+    svg2.append(plotTrajectory(trajectory(10, 45), "#0000FF"));
+
+    //add wind
+    function trajectoryWithWind(initialVelocity, angle, wind){
+        //need to convert degree to radian
+        var ballData=[{"ground":0, "x":0, "y":0, "xVelocity": initialVelocity*Math.cos((angle*Math.PI/180)),"yVelocity": initialVelocity*Math.sin((angle*Math.PI/180)), "xAcceleration":(wind/10), "yAcceleration": (-3.71/10)}];
+        while (true){
+            let last=ballData.length-1
+            if (ballData[last]["x"]<=17 && ballData[last]["x"]>=13){
+                ballData[last]["ground"]=20
+                if (ballData[last]["y"]<=ballData[last]["ground"]){
+                    return ballData
+                } else{
+                    oldBall=ballData[last]
+                    newBall={}
+                    newBall["ground"]=20
+                    newBall["xAcceleration"]=(wind/10)
+                    newBall["yAcceleration"]=-3.71/10
+                    newBall["xVelocity"]=oldBall["xVelocity"]+newBall["xAcceleration"]
+                    newBall["yVelocity"]=oldBall["yVelocity"]+newBall["yAcceleration"]
+                    newBall["x"]=oldBall["x"]+0.1*newBall["xVelocity"]
+                    newBall["y"]=oldBall["y"]+0.1*newBall["yVelocity"]
+                    ballData.push(newBall);
+                }
+            } else{
+                ballData[last]["ground"]=0
+                if (ballData[last]["y"]<=ballData[last]["ground"] && ballData.length>1){
+                    return ballData
+                } else{
+                    oldBall=ballData[last]
+                    newBall={}
+                    newBall["ground"]=0
+                    newBall["xAcceleration"]=(wind/10)
+                    newBall["yAcceleration"]=-3.71/10
+                    newBall["xVelocity"]=oldBall["xVelocity"]+newBall["xAcceleration"]
+                    newBall["yVelocity"]=oldBall["yVelocity"]+newBall["yAcceleration"]
+                    newBall["x"]=oldBall["x"]+0.1*newBall["xVelocity"]
+                    newBall["y"]=oldBall["y"]+0.1*newBall["yVelocity"]
+                    ballData.push(newBall);
+                }
+            }
+        }
+    }
+
+    function plotTrajectory2(array, color){
+
+    let impact=array[array.length-1]
+
+    let line=d3.line().x(d=>xScale(d["x"])).y(d=>yScale(d["y"]));
+    
+    function textGen(pointOfImpact){
+        if (impact["x"]>=25 && impact["x"]<=35){
+            var target="HIT";
+        } else{
+            var target="MISS";
+        }
+        var time=Math.floor(0.1*(array.length-1))
+        var dist=impact["x"].toFixed(1)
+        return (target+", "+time+"s, "+dist+"m")
+    }
+
+    track.append("path")
+        .attr("d", line(array))
+        .attr("opacity", 0.25)
+        .style("stroke", color)
+        .style("stroke-width", 5)
+        .style("fill","transparent");
+    
+    track.append("text")
+         .style("fill","red")
+         .attr("x", xScale(impact["x"]-10) )
+         .attr("y", yScale(impact["y"]+15) )
+         .text(textGen(impact));
+
+    }
+
+    svg2.append(plotTrajectory2(trajectoryWithWind(13, 80, 1), "#FF0000"));
+    
+    
+
+</script>
+
+
+</body>
