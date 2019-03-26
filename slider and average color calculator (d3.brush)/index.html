@@ -1,0 +1,203 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <style>
+            #hueSlider{
+                margin-left:30px;
+                padding:5px;
+            }
+        </style>
+    </head>
+    <body>
+        <p id="p1"><strong>Problem 1: </strong></p>
+        <div id="plot1">
+            <svg id = "hsl" height=500 width=500>
+                
+            </svg>
+        </div>
+
+        <script id="p1code">
+
+            let svg1=d3.select("#hsl");
+            let width1=svg1.attr("width");
+            let height1=svg1.attr("height");
+            let margin1 = { top: 50, right: 50, bottom: 50, left:50};
+            let chartWidth1 = width1 - margin1.left - margin1.right;
+            let chartHeight1 = height1 - margin1.top - margin1.bottom;
+
+            //data of colors
+            var objects=[];
+            for (var i=0; i<=100; i+=10) {
+                for (var j=0; j<=100; j+=10){
+                    objects.push({"saturation":i,"lightness":j});
+                }
+            }
+
+            //create scale for grid
+            const lightScale = d3.scaleLinear().domain([0,100]).range([0, chartWidth1, 40]);
+            const satScale = d3.scaleLinear().domain([0,100]).range([chartHeight1, 0, 40]);
+
+
+            var chart = svg1.append("g").attr("transform","translate("+margin1.left+","+margin1.top+")");
+
+            function showCircles(hue){
+                
+                var circles=chart.selectAll("circle").data(objects);
+
+                
+                circles.enter()
+                    .append("circle")
+                    .attr("cx", d=>lightScale(d["lightness"]))
+                    .attr("cy", d=>satScale(d["saturation"]))
+                    .attr("r", "20")
+                    .attr("stroke", "grey")
+                    .attr("stroke-width", "1")
+                    .merge(circles)
+                    .style("fill", d=> d3.hsl(hue, d["saturation"]/100, d["lightness"]/100));
+                
+                
+                };
+
+            //build slider
+            var sliderDiv = d3.select("#plot1").append("div").attr("transform","translate("+margin1.left+","+margin1.top+")");
+
+            sliderDiv.append("input")
+                     .attr("type", "range").attr("class", "slider")
+                     .attr("id","hueSlider")
+                     .style("width","300px")
+                     .attr("min", 0)
+                     .attr("max", 360)
+                     .attr("step", 1)
+                     .attr("value", 0)
+                     .on("input", function input() {
+                         showCircles(Number(this.value));
+                    });
+             
+            showCircles();       
+  
+        </script>
+
+        <!--- Copy this segment of code into your homework --->
+
+        <p>Problem 2:</p>
+
+        <svg id="container" width="800" height="437">
+        <foreignObject width="800" height="437" y="0" x="0">
+        <!--- Foreign object allows us to nest HTML inside an SVG --->
+        <!--- It can get pretty hacky, so use at your own risk --->
+        <canvas id="painting" width="800" height="437"></canvas>
+        </foreignObject>
+        <g id="brush"></g>
+        </svg>
+        <br/>
+        <svg width="800" height="100">
+        <rect id="color" x="0" y="0" width="800" height="100" fill="white" />
+        <text id="label" x="20" y="80" />
+        </svg>
+
+        <script>
+
+        // Some helper variables for you to use -- do not modify or helper functions will fail
+        var canvas = d3.select("#painting");
+        var gfxContext = canvas.node().getContext("2d");
+        var imgWidth = canvas.node().width;
+        var imgHeight = canvas.node().height;
+
+        var img = new Image;
+        img.src = "nighthawks.png"
+        img.onload = imgLoaded;
+
+        function imgLoaded() {
+        gfxContext.drawImage(this, 0, 0); // Paint image to canvas
+
+        // pixels is a 2-d array containing RGB data for the whole image
+        //  for example:  pixels[155][22] will tell give you a dict for the RGB values at point x=22, y=155
+        //              (note that y position comes first, then x position)
+        //              R, G, and B values start at 0 and run to 255
+        let pixels = getAllPixels();
+
+        // ----- All of your code for this problem must go between these comments -----
+        // Make use of the g#brush group inside of the SVG element for placing your brush
+        // Make use of the #color and #label elements for your average color and text label
+
+        //create a brush
+        let svg2=d3.select("#container");
+        let width2=svg2.attr("width");
+        let height2=svg2.attr("height");
+        var brush = d3.brush()
+                      .extent([ [0,0],[width2, height2] ])
+                      .on("brush end", brushed); 
+        
+        function brushed(){
+            var brushArray=d3.event.selection;
+            if(brushArray!=null){
+                var x1= Math.round(brushArray[0][0]);
+                var x2= Math.round(brushArray[1][0]);
+                var y1= Math.round(brushArray[0][1]);
+                var y2= Math.round(brushArray[1][1]);
+                //go through every pixel
+                var Ltotal=0;
+                var Atotal=0;
+                var Btotal=0;
+                var count=0
+                for (var i=x1; i<=x2; i++){
+                    for (var j=y1; j<=y2; j++){
+                        var rgb = pixels[j][i];
+                        var lab = d3.lab(d3.rgb(rgb["r"], rgb["g"], rgb["b"]));
+                        Ltotal+=lab["l"];
+                        Atotal+=lab["a"];
+                        Btotal+=lab["b"];
+                        count+=1;
+                    }
+                }
+                var averageColor = d3.lab(Ltotal/count, Atotal/count, Btotal/count);
+                var colorRect = d3.select("#color");
+                colorRect.attr("fill", averageColor);
+                var colorLabel = d3.select("#label");
+                colorLabel.text(averageColor.hex());
+                if (averageColor["l"]<50){
+                    colorLabel.attr("fill", "white");
+                } else {
+                    colorLabel.attr("fill", "black");
+                }
+            }
+        }
+
+        d3.select("#brush").call(brush);
+        
+
+
+
+
+
+        // ----- All of your code for this problem must go between these comments -----
+
+        }
+
+        function getAllPixels() {
+
+        let gfxData = gfxContext.getImageData(0,0,imgWidth,imgHeight).data;
+        let processedData = [];
+        for (let i=0; i<gfxData.length; i=i+4) { // contains stripe of RGBARGBARGBA
+            let xCoord = Math.floor(i/4) % imgWidth;
+            let yCoord = Math.floor(i/(imgWidth*4))
+            if (xCoord === 0) { processedData.push( [] ); }
+            processedData[processedData.length-1].push( {
+            x: xCoord,
+            y: yCoord,
+            r: gfxData[i],
+            g: gfxData[i+1],
+            b: gfxData[i+2]
+            } );
+        }
+        return processedData;
+
+        }
+
+
+        </script>
+
+        <!--- End segment of code for your homework --->
+
+    </body>
+</html>
