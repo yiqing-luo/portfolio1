@@ -1,0 +1,116 @@
+html {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0 50px;
+}
+
+p{
+    font-size: 20px;
+}
+
+table{
+    border-collapse: collapse;
+    width:100%;
+}
+
+td{
+    border:2px solid;
+    border-color: #682626;
+    padding:10px;
+    text-align: center;
+    width:5%;
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 20px;
+
+}
+
+th{
+    border:2px solid;
+    border-color: #682626;
+    padding:10px;
+    text-align: center;
+    width:5%;
+    font-size: 18px;
+    color:#682626;
+}
+
+h2 {
+    font-size: 30px;
+    margin-top:30px;
+}
+
+h1{
+    font-size: 38px;
+    padding:10px;
+    text-decoration: underline;
+    color:#4C1919;
+}
+
+#searchForm input{
+    height:30px;
+    width:100%;
+    margin-top:5px;
+    font-size:15px;
+}
+
+button{
+    font-size: 22px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:white;
+    border:none;
+    background-color: #682626;
+    margin-top:10px;
+}
+
+#back{
+    margin-left:10px;
+}
+
+select{
+    font-size: 18px;
+    display:block;
+    margin-top:10px;
+}
+
+#addReview ul li{
+    padding:10px 0;
+}
+
+.review_short input{
+    height:30px;
+    width:50%;
+    margin-top:5px;
+    font-size:15px;
+}
+
+#review_title input{
+    height:30px;
+    width:80%;
+    margin-top:5px;
+    font-size:15px;
+}
+
+#addReview textarea{
+    width:80%;
+    font-size: 15px;
+}
+
+.choices {
+    display:flex;
+    padding:10px;
+}
+
+.choices label{
+    margin-left:10px;
+}
+
+#messages {
+    background-color: red;
+    color:white;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    padding:0.3px 0;
+}
