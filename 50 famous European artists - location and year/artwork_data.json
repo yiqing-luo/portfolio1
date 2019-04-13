@@ -1,0 +1,324 @@
+[
+  {
+    "id": 0,
+    "name": "Amedeo Modigliani",
+    "genre": "Expressionism",
+    "paintings": 193,
+    "img": "images/Amedeo_Modigliani_140.jpg"
+  },
+  {
+    "id": 1,
+    "name": "Wassily Kandinskiy",
+    "genre": "Expressionism",
+    "paintings": 88,
+    "img": "images/Vasiliy_Kandinskiy_11.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Claude Monet",
+    "genre": "Impressionism",
+    "paintings": 73,
+    "img": "images/Claude_Monet_1.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Rene Magritte",
+    "genre": "Surrealism",
+    "paintings": 194,
+    "img": "images/Rene_Magritte_2.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Salvador Dali",
+    "genre": "Surrealism",
+    "paintings": 139,
+    "img": "images/Salvador_Dali_5.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Edouard Manet",
+    "genre": "Realism",
+    "paintings": 90,
+    "img": "images/Edouard_Manet_81.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Andrei Rublev",
+    "genre": "Byzantine Art",
+    "paintings": 99,
+    "img": "images/Andrei_Rublev_59.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Vincent van Gogh",
+    "genre": "Post-Impressionism",
+    "paintings": 877,
+    "img": "images/Vincent_van_Gogh_1.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Gustav Klimt",
+    "genre": "Symbolism",
+    "paintings": 117,
+    "img": "images/Vincent_van_Gogh_1.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Hieronymus Bosch",
+    "genre": "Renaissance",
+    "paintings": 137,
+    "img": "images/Hieronymus_Bosch_1.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Kazimir Malevich",
+    "genre": "Suprematism",
+    "paintings": 126,
+    "img": "images/Kazimir_Malevich_26.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Mikhail Vrubel",
+    "genre": "Symbolism",
+    "paintings": 171,
+    "img": "images/Mikhail_Vrubel_6.jpg"
+  },
+  {
+    "id": 13,
+    "name": "Pablo Picasso",
+    "genre": "Cubism",
+    "paintings": 439,
+    "img": "images/Pablo_Picasso_8.jpg"
+  },
+  {
+    "id": 14,
+    "name": "Peter Paul Rubens",
+    "genre": "Baroque",
+    "paintings": 141,
+    "img": "images/Peter_Paul_Rubens_17.jpg"
+  },
+  {
+    "id": 15,
+    "name": "Pierre-Auguste Renoir",
+    "genre": "Impressionism",
+    "paintings": 336,
+    "img": "images/Pierre-Auguste_Renoir_23.jpg"
+  },
+  {
+    "id": 16,
+    "name": "Francisco Goya",
+    "genre": "Romanticism",
+    "paintings": 291,
+    "img": "images/Francisco_Goya_8.jpg"
+  },
+  {
+    "id": 18,
+    "name": "El Greco",
+    "genre": "Mannerism",
+    "paintings": 87,
+    "img": "images/Edouard_Manet_81.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Albrecht Durer",
+    "genre": "Renaissance",
+    "paintings": 328,
+    "img": "images/Albrecht_Durer_8.jpg"
+  },
+  {
+    "id": 20,
+    "name": "Alfred Sisley",
+    "genre": "Impressionism",
+    "paintings": 259,
+    "img": "images/Alfred_Sisley_8.jpg"
+  },
+  {
+    "id": 21,
+    "name": "Pieter Bruegel",
+    "genre": "Renaissance",
+    "paintings": 134,
+    "img": "images/Pieter_Bruegel_48.jpg"
+  },
+  {
+    "id": 22,
+    "name": "Marc Chagall",
+    "genre": "Primitivism",
+    "paintings": 239,
+    "img": "images/Marc_Chagall_2.jpg"
+  },
+  {
+    "id": 23,
+    "name": "Giotto di Bondone",
+    "genre": "Renaissance",
+    "paintings": 119,
+    "img": "images/Giotto_di_Bondone_3.jpg"
+  },
+  {
+    "id": 24,
+    "name": "Sandro Botticelli",
+    "genre": "Renaissance",
+    "paintings": 164,
+    "img": "images/Sandro_Botticelli_22.jpg"
+  },
+  {
+    "id": 25,
+    "name": "Caravaggio",
+    "genre": "Baroque",
+    "paintings": 55,
+    "img": "images/Caravaggio_5.jpg"
+  },
+  {
+    "id": 26,
+    "name": "Leonardo da Vinci",
+    "genre": "Renaissance",
+    "paintings": 143,
+    "img": "images/Leonardo_da_Vinci_23.jpg"
+  },
+  {
+    "id": 27,
+    "name": "Diego Velazquez",
+    "genre": "Baroque",
+    "paintings": 128,
+    "img": "images/Diego_Velazquez_14.jpg"
+  },
+  {
+    "id": 28,
+    "name": "Henri Matisse",
+    "genre": "Post-Impressionism",
+    "paintings": 186,
+    "img": "images/Henri_Matisse_20.jpg"
+  },
+  {
+    "id": 29,
+    "name": "Jan van Eyck",
+    "genre": "Renaissance",
+    "paintings": 81,
+    "img": "images/Jan_van_Eyck_74.jpg"
+  },
+  {
+    "id": 30,
+    "name": "Edgar Degas",
+    "genre": "Impressionism",
+    "paintings": 702,
+    "img": "images/Edgar_Degas_536.jpg"
+  },
+  {
+    "id": 31,
+    "name": "Rembrandt",
+    "genre": "Baroque",
+    "paintings": 262,
+    "img": "images/Rembrandt_51.jpg"
+  },
+  {
+    "id": 32,
+    "name": "Titian",
+    "genre": "Renaissance",
+    "paintings": 255,
+    "img": "images/Titian_85.jpg"
+  },
+  {
+    "id": 33,
+    "name": "Henri de Toulouse-Lautrec",
+    "genre": "Post-Impressionism",
+    "paintings": 81,
+    "img": "images/Henri_de_Toulouse-Lautrec_15.jpg"
+  },
+  {
+    "id": 34,
+    "name": "Gustave Courbet",
+    "genre": "Realism",
+    "paintings": 59,
+    "img": "images/Gustave_Courbet_59.jpg"
+  },
+  {
+    "id": 35,
+    "name": "Camille Pissarro",
+    "genre": "Post-Impressionism",
+    "paintings": 91,
+    "img": "images/Camille_Pissarro_86.jpg"
+  },
+  {
+    "id": 36,
+    "name": "William Turner",
+    "genre": "Romanticism",
+    "paintings": 66,
+    "img": "images/William_Turner_55.jpg"
+  },
+  {
+    "id": 37,
+    "name": "Edvard Munch",
+    "genre": "Symbolism",
+    "paintings": 67,
+    "img": "images/Edvard_Munch_12.jpg"
+  },
+  {
+    "id": 38,
+    "name": "Paul Cezanne",
+    "genre": "Post-Impressionism",
+    "paintings": 47,
+    "img": "images/Paul_Cezanne_9.jpg"
+  },
+  {
+    "id": 39,
+    "name": "Eugene Delacroix",
+    "genre": "Romanticism",
+    "paintings": 31,
+    "img": "images/Eugene_Delacroix_16.jpg"
+  },
+  {
+    "id": 40,
+    "name": "Henri Rousseau",
+    "genre": "Primitivism",
+    "paintings": 70,
+    "img": "images/Henri_Rousseau_51.jpg"
+  },
+  {
+    "id": 41,
+    "name": "Georges Seurat",
+    "genre": "Post-Impressionism",
+    "paintings": 43,
+    "img": "images/Georges_Seurat_11.jpg"
+  },
+  {
+    "id": 42,
+    "name": "Paul Klee",
+    "genre": "Expressionism",
+    "paintings": 188,
+    "img": "images/Paul_Klee_92.jpg"
+  },
+  {
+    "id": 43,
+    "name": "Piet Mondrian",
+    "genre": "Neoplasticism",
+    "paintings": 84,
+    "img": "images/Piet_Mondrian_32.jpg"
+  },
+  {
+    "id": 44,
+    "name": "Joan Miro",
+    "genre": "Surrealism",
+    "paintings": 102,
+    "img": "images/Joan_Miro_9.jpg"
+  },
+  {
+    "id": 46,
+    "name": "Paul Gauguin",
+    "genre": "Symbolism",
+    "paintings": 311,
+    "img": "images/Paul_Gauguin_227.jpg"
+  },
+  {
+    "id": 47,
+    "name": "Raphael",
+    "genre": "Renaissance",
+    "paintings": 109,
+    "img": "images/Raphael_50.jpg"
+  },
+  {
+    "id": 48,
+    "name": "Michelangelo",
+    "genre": "Renaissance",
+    "paintings": 49,
+    "img": "images/Michelangelo_4.jpg"
+  }
+]

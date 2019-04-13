@@ -1,0 +1,416 @@
+[
+  {
+    "id": 0,
+    "name": "Amedeo Modigliani",
+    "birth": 1884,
+    "death": 1920,
+    "city": "Livorno",
+    "latitude": 43.5485,
+    "longitude": 10.3106
+  },
+  {
+    "id": 1,
+    "name": "Wassily Kandinskiy",
+    "birth": 1866,
+    "death": 1944,
+    "city": "Moscow",
+    "latitude": 56.7558,
+    "longitude": 37.6173
+  },
+  {
+    "id": 3,
+    "name": "Claude Monet",
+    "birth": 1840,
+    "death": 1926,
+    "city": "Paris",
+    "latitude": 48.8566,
+    "longitude": 3.3522
+  },
+  {
+    "id": 4,
+    "name": "Rene Magritte",
+    "birth": 1898,
+    "death": 1967,
+    "city": "Lessines",
+    "latitude": 50.7124,
+    "longitude": 3.8289
+  },
+  {
+    "id": 5,
+    "name": "Salvador Dali",
+    "birth": 1904,
+    "death": 1989,
+    "city": "Figueres",
+    "latitude": 42.2655,
+    "longitude": 2.9581
+  },
+  {
+    "id": 6,
+    "name": "Edouard Manet",
+    "birth": 1832,
+    "death": 1883,
+    "city": "Paris",
+    "latitude": 47.8566,
+    "longitude": 2.3522
+  },
+  {
+    "id": 7,
+    "name": "Andrei Rublev",
+    "birth": 1360,
+    "death": 1430,
+    "city": "Moscow",
+    "latitude": 55.7558,
+    "longitude": 37.6173
+  },
+  {
+    "id": 8,
+    "name": "Vincent van Gogh",
+    "birth": 1853,
+    "death": 1890,
+    "city": "Zundert",
+    "latitude": 51.4698,
+    "longitude": 4.655
+  },
+  {
+    "id": 9,
+    "name": "Gustav Klimt",
+    "birth": 1862,
+    "death": 1918,
+    "city": "Baumgarten",
+    "latitude": 48.2082,
+    "longitude": 16.3738
+  },
+  {
+    "id": 10,
+    "name": "Hieronymus Bosch",
+    "birth": 1450,
+    "death": 1516,
+    "city": "s-Hertogenbosch",
+    "latitude": 51.6978,
+    "longitude": 5.3037
+  },
+  {
+    "id": 11,
+    "name": "Kazimir Malevich",
+    "birth": 1879,
+    "death": 1935,
+    "city": "Kiev",
+    "latitude": 50.4501,
+    "longitude": 30.5234
+  },
+  {
+    "id": 12,
+    "name": "Mikhail Vrubel",
+    "birth": 1856,
+    "death": 1910,
+    "city": "Omsk",
+    "latitude": 54.9885,
+    "longitude": 73.3242
+  },
+  {
+    "id": 13,
+    "name": "Pablo Picasso",
+    "birth": 1881,
+    "death": 1973,
+    "city": "Málaga",
+    "latitude": 36.7213,
+    "longitude": -4.4214
+  },
+  {
+    "id": 14,
+    "name": "Peter Paul Rubens",
+    "birth": 1577,
+    "death": 1640,
+    "city": "Siegen",
+    "latitude": 50.8838,
+    "longitude": 8.021
+  },
+  {
+    "id": 15,
+    "name": "Pierre-Auguste Renoir",
+    "birth": 1841,
+    "death": 1919,
+    "city": "Limoges",
+    "latitude": 45.8336,
+    "longitude": 1.2611
+  },
+  {
+    "id": 16,
+    "name": "Francisco Goya",
+    "birth": 1746,
+    "death": 1828,
+    "city": "Fuendetodos",
+    "latitude": 41.3433,
+    "longitude": 0.9594
+  },
+  {
+    "id": 18,
+    "name": "El Greco",
+    "birth": 1541,
+    "death": 1614,
+    "city": "Heraklion",
+    "latitude": 35.3387,
+    "longitude": 25.1442
+  },
+  {
+    "id": 19,
+    "name": "Albrecht Durer",
+    "birth": 1471,
+    "death": 1528,
+    "city": "Nuremberg",
+    "latitude": 49.4521,
+    "longitude": 11.0767
+  },
+  {
+    "id": 20,
+    "name": "Alfred Sisley",
+    "birth": 1839,
+    "death": 1899,
+    "city": "London",
+    "latitude": 51.5074,
+    "longitude": 0.1278
+  },
+  {
+    "id": 21,
+    "name": "Pieter Bruegel",
+    "birth": 1525,
+    "death": 1569,
+    "city": "Brussels",
+    "latitude": 50.8503,
+    "longitude": 4.3517
+  },
+  {
+    "id": 22,
+    "name": "Marc Chagall",
+    "birth": 1887,
+    "death": 1985,
+    "city": "Belarus",
+    "latitude": 53.7098,
+    "longitude": 27.9534
+  },
+  {
+    "id": 23,
+    "name": "Giotto di Bondone",
+    "birth": 1266,
+    "death": 1337,
+    "city": "Vicchio",
+    "latitude": 43.9331,
+    "longitude": 11.4647
+  },
+  {
+    "id": 24,
+    "name": "Sandro Botticelli",
+    "birth": 1445,
+    "death": 1510,
+    "city": "Florence",
+    "latitude": 43.7696,
+    "longitude": 11.2558
+  },
+  {
+    "id": 25,
+    "name": "Caravaggio",
+    "birth": 1571,
+    "death": 1610,
+    "city": "Milan",
+    "latitude": 45.4642,
+    "longitude": 9.19
+  },
+  {
+    "id": 26,
+    "name": "Leonardo da Vinci",
+    "birth": 1452,
+    "death": 1519,
+    "city": "Anchiano",
+    "latitude": 43.8,
+    "longitude": 10.9393
+  },
+  {
+    "id": 27,
+    "name": "Diego Velazquez",
+    "birth": 1599,
+    "death": 1660,
+    "city": "Seville",
+    "latitude": 37.3891,
+    "longitude": -5.9845
+  },
+  {
+    "id": 28,
+    "name": "Henri Matisse",
+    "birth": 1869,
+    "death": 1954,
+    "city": "Le Cateau-Cambresis",
+    "latitude": 50.1039,
+    "longitude": 3.5442
+  },
+  {
+    "id": 29,
+    "name": "Jan van Eyck",
+    "birth": 1395,
+    "death": 1441,
+    "city": "Maaseik",
+    "latitude": 51.0984,
+    "longitude": 5.7838
+  },
+  {
+    "id": 30,
+    "name": "Edgar Degas",
+    "birth": 1834,
+    "death": 1917,
+    "city": "Paris",
+    "latitude": 49.8566,
+    "longitude": 2.3522
+  },
+  {
+    "id": 31,
+    "name": "Rembrandt",
+    "birth": 1606,
+    "death": 1669,
+    "city": "Leiden",
+    "latitude": 52.1601,
+    "longitude": 4.497
+  },
+  {
+    "id": 32,
+    "name": "Titian",
+    "birth": 1488,
+    "death": 1576,
+    "city": "Pieve di Cadore",
+    "latitude": 46.4288,
+    "longitude": 12.3739
+  },
+  {
+    "id": 33,
+    "name": "Henri de Toulouse-Lautrec",
+    "birth": 1864,
+    "death": 1901,
+    "city": "Albi",
+    "latitude": 43.9251,
+    "longitude": 2.1486
+  },
+  {
+    "id": 34,
+    "name": "Gustave Courbet",
+    "birth": 1819,
+    "death": 1877,
+    "city": "Ornans",
+    "latitude": 47.106,
+    "longitude": 6.147
+  },
+  {
+    "id": 35,
+    "name": "Camille Pissarro",
+    "birth": 1830,
+    "death": 1903,
+    "city": "Passy",
+    "latitude": 48.8577,
+    "longitude": 2.2856
+  },
+  {
+    "id": 36,
+    "name": "William Turner",
+    "birth": 1775,
+    "death": 1851,
+    "city": "London",
+    "latitude": 52.5074,
+    "longitude": 1.1278
+  },
+  {
+    "id": 37,
+    "name": "Edvard Munch",
+    "birth": 1863,
+    "death": 1944,
+    "city": "Adalsbruk",
+    "latitude": 60.7965,
+    "longitude": 11.3112
+  },
+  {
+    "id": 38,
+    "name": "Paul Cezanne",
+    "birth": 1839,
+    "death": 1906,
+    "city": "Aix-en-Provence",
+    "latitude": 43.5297,
+    "longitude": 5.4474
+  },
+  {
+    "id": 39,
+    "name": "Eugene Delacroix",
+    "birth": 1798,
+    "death": 1863,
+    "city": "Saint-Maurice",
+    "latitude": 45.6186,
+    "longitude": 6.7695
+  },
+  {
+    "id": 40,
+    "name": "Henri Rousseau",
+    "birth": 1844,
+    "death": 1910,
+    "city": "Laval",
+    "latitude": 48.0785,
+    "longitude": -0.767
+  },
+  {
+    "id": 41,
+    "name": "Georges Seurat",
+    "birth": 1859,
+    "death": 1891,
+    "city": "Paris",
+    "latitude": 48.8566,
+    "longitude": 2.3522
+  },
+  {
+    "id": 42,
+    "name": "Paul Klee",
+    "birth": 1879,
+    "death": 1940,
+    "city": "Munchenbuchsee",
+    "latitude": 47.0216,
+    "longitude": 7.4504
+  },
+  {
+    "id": 43,
+    "name": "Piet Mondrian",
+    "birth": 1872,
+    "death": 1944,
+    "city": "Amersfoort",
+    "latitude": 52.1561,
+    "longitude": 5.3878
+  },
+  {
+    "id": 44,
+    "name": "Joan Miro",
+    "birth": 1893,
+    "death": 1983,
+    "city": "Barcelona",
+    "latitude": 41.3851,
+    "longitude": 2.1734
+  },
+  {
+    "id": 46,
+    "name": "Paul Gauguin",
+    "birth": 1848,
+    "death": 1903,
+    "city": "Paris",
+    "latitude": 48.8566,
+    "longitude": 1.3522
+  },
+  {
+    "id": 47,
+    "name": "Raphael",
+    "birth": 1483,
+    "death": 1520,
+    "city": "Urbino",
+    "latitude": 43.7263,
+    "longitude": 12.6366
+  },
+  {
+    "id": 48,
+    "name": "Michelangelo",
+    "birth": 1475,
+    "death": 1564,
+    "city": "Caprese Michelangelo",
+    "latitude": 43.6415,
+    "longitude": 11.9871
+  }
+]

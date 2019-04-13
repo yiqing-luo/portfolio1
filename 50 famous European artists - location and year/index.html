@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script>
+
+  <title> Project 2 </title>
+  <style>
+  body {
+    font-family: Georgia, Avenir, serif;
+    margin:0;
+    background-color:#919d82;
+  }
+
+  h1 {
+    font-family:Herculanum, Avenir, sans-serif;
+    margin:10px;
+  }
+
+  em {
+    margin:10px;
+  }
+
+  p {
+    margin:10px;
+  }
+
+  .legend text {
+    font-family: Herculanum, Georgia, Avenir, serif;
+  }
+
+  .country{
+    fill:lightgrey;
+    stroke:none;
+  }
+
+  .districts{
+    fill:black;
+    stroke:white;
+    stroke-width: 1px;
+  }
+
+  .outline{
+    stroke: black;
+    stroke-width: 1px;
+    fill:none;
+  }
+
+
+  #europeMap {
+    margin-left:0;
+    margin-top:-150px;
+  }
+
+  #container {
+    display:flex;
+  }
+
+  #legendsvg {
+    margin-left:0;
+    margin-right:0;
+  }
+
+  .gridlines line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+  }
+
+  #city {
+    font-style: italic;
+
+  }
+
+  #legendbox {
+    width:40px;
+
+  }
+
+
+  </style>
+</head>
+<body>
+
+  <h1>European Artists through the Ages</h1>
+  <p><em>Hover over circles to see which artist they represent and their artwork!</em> </p>
+  <p><em> You can also toggle the slider to see them through the years from the 13th to the 21st century!</em></p>
+  <p><em> Using two fingers to scroll up and down will zoom in and out of the map!</em></p>
+  <div id="container">
+    <div id="slider"></div>
+    <div id="legendbox"><span id="curYear"></span></div>
+    <svg id="europeMap" width="700" height="800"></svg>
+    <svg id="legendsvg" width="175" height="800"></svg>
+  </div>
+
+
+  <script>
+  const requestInfo = async () => {
+
+    let svg = d3.select("#europeMap");
+    let legendsvg = d3.select("#legendsvg");
+    let width = svg.attr("width");
+    let height = svg.attr("height");
+
+    let margin = { top: 0, right: 100, bottom: 0, left:0};
+    let mapWidth = width - margin.left - margin.right;
+    let mapHeight = height - margin.top - margin.bottom;
+    let map = svg.append("g")
+    .attr("transform","translate("+margin.left+","+margin.top+")");
+
+    const europe = await d3.json("europe.topojson");
+    // const france= await d3.json("france.geojson");
+
+    // var countries = topojson.feature(europe, europe.objects.france);
+    // var countriesMesh = topojson.mesh(europe, europe.objects.france);
+    var countries = topojson.feature(europe, europe.objects.europe);
+    var countriesMesh = topojson.mesh(europe, europe.objects.europe);
+    var projection = d3.geoMercator().fitSize([mapWidth, mapHeight], countries);
+    var pathGen = d3.geoPath().projection(projection);
+    let colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#000000', '#800000'];
+    //https://sashat.me/2017/01/11/list-of-20-simple-distinct-colors/
+    var colorScale = d3.scaleOrdinal(colors);
+
+    // console.log(countries);
+
+    map.selectAll("path").data(countries.features)
+    .enter()
+    .append("path")
+    .attr("class","country")
+    .style("fill", "#f9f3de")
+    //  .style("fill",function() {return "hsl(" + Math.random() * 250 + ",45%,85%)";})
+    .attr("d", pathGen);
+
+    map.append("path")
+    .datum(countriesMesh)
+    .attr("class","outline")
+    .attr("d", pathGen);
+
+    map.append("path")
+    .attr( "class", "graticule" )
+    .attr( "d", pathGen( d3.geoGraticule10() ) );
+
+    //calling datasets
+    var artist = await d3.json("artist_data.json");
+    var artwork = await d3.json("artwork_data.json");
+    var dataset = {};
+    for(var key in artist) dataset[key] = artist[key];
+    for(var key in artwork){
+      for (var field in artwork[key]){
+        dataset[key][field] = artwork[key][field];
+      }
+    };
+
+    arr = [];
+    for (var key in dataset){
+      arr.push(dataset[key]);
+    }
+
+    var location = arr;
+    //Flip json -  https://stackoverflow.com/questions/43653860/transpose-dynamic-table-from-rows-to-columns-and-vice-versa
+    //   var transpose = location.reduce(function(arr, obj) {
+    //       for (let key in obj) {
+    //         if (obj.hasOwnProperty(key)) {
+    //           arr[key] = arr[key] || []
+    //           arr[key].push(obj[key])
+    //         }
+    //       }
+    //       return arrs
+    //     }, {})
+    //
+    //     console.log(transpose)
+    // let transpose2 = new Array (transpose);
+
+    /*Legend*/
+    //https://d3-legend.susielu.com/#color-ordinal
+    let ordinal = d3.scaleOrdinal()
+    .domain(["Expressionism","Impressionism","Surrealism","Realism","Byzantine Art","Post-Impressionism","Symbolism","Renaissance","Suprematism","Cubism","Baroque","Romanticism","Mannerism","Primitivism","Neoplasticism"])
+    .range(colors);
+
+    //console.log(ordinal)
+
+    let legend = d3.legendColor()
+    .shape("path",d3.symbol().type(d3.symbolCircle).size(150)())
+    .shapePadding(10)
+    //.cellFilter(function(d){  return d.label !== "e"})
+    .scale(ordinal);
+
+    //console.log(legend)
+
+    legendsvg.append("g")
+    .attr("class", "legend")
+    .attr("transform", "translate(20,20)");
+    legendsvg.select(".legend")
+    .call(legend);
+
+
+    location.forEach(function(d,i) {
+      // console.log(location);
+      //let lat = d["latitude"]
+      //console.log (lat);
+
+
+      let years = projection([d["longitude"],d["latitude"]]);
+      let lat = years[0];
+      let long = years[1];
+      //console.log(lat);
+      //console.log(long);
+
+      let circle=map.append("circle")
+      .attr("r",7)
+      .attr("cx", lat)
+      .attr("cy", long)
+      .style("fill",colorScale(d["genre"]))
+      .style("opacity",1);
+
+
+      circle.on("mouseover", function() {
+        // console.log(d3.select(this));
+        d3.select(this)
+        .transition().duration(200)
+        .attr("r",15)
+        .style("stroke","#000");
+
+        map.append("rect")
+        .attr("x", lat + 10)
+        .attr("y", long - 60)
+        .attr("width", 225)
+        .attr("height", 230)
+        .style("fill", "white")
+        .style("stroke", "lightgrey");
+
+        map.append("svg:image")
+        .attr('x', lat + 20)
+        .attr('y', long - 10)
+        .attr('width', 175)
+        .attr('height', 175)
+        .attr("xlink:href", function() {return d["img"]});
+
+        // Add a label
+        map.append("text")
+        .attr("id", d['name'].replace(/[ _\-,.:'#!\?]/g,""))
+        .attr('class', 'artists')
+        .attr("x", lat + 20 )
+        .attr("y", long - 40 )
+        .text(d['name'])
+        .style("font-size", 18);
+        map.append("text")
+        .attr("id", d['city'].replace(/[ _\-,.:'#!\?]/g,""))
+        .attr('class', 'city')
+        .attr("x", lat + 20 )
+        .attr("y", long - 20 )
+        .text(d['city'])
+        .style("font-size", 18)
+        .style("font-style", "italic");
+
+      });
+      //
+      circle.on("mouseout", function() {
+        d3.select(this)
+        .transition().duration(200)
+        .attr("r",7)
+        .style("stroke","none");
+        d3.select(".artists").remove();
+        d3.select("rect").remove();
+        d3.select("image").remove();
+        d3.select(".city").remove();
+      });
+    });
+
+
+
+    function changeYear(current){
+
+      var circle = map.selectAll("circle").data(location);
+
+
+      circle.enter()
+      .append("circle")
+      .attr("r",7)
+      .attr("cx", d=>projection(d["latitude"], d["longitude"])[0])
+      .attr("cy", d=>projection(d["latitude"], d["longitude"])[1])
+      .style("fill",d=>colorScale(d["genre"]))
+      .merge(circle)
+      .style("opacity", d=>(current>= d["birth"] && current<=d["death"]) ? 1 : 0.1);
+
+      //show current year
+      d3.select("#curYear").text( d=>current);
+    };
+
+
+
+
+    var slider = d3.select("#slider")
+    slider.append("div")
+    .append("input")
+    .attr("type", "range").attr("class", "slider")
+    .attr("id","intercept")
+    .style("width","300px")
+    .attr("min", 1266)
+    .attr("max", 1990)
+    .attr("value", 1266)
+    .on ("input", function input() {
+      changeYear(Number(this.value));
+    })
+
+    // .append("datalist")
+    // .attr("id", "axis");
+
+    changeYear(1266);
+
+    zoom
+    var zoom = d3.zoom()
+    .scaleExtent([1,10])
+    .on("zoom", zoomed);
+
+    svg.call(zoom);
+
+    svg.call(zoom.transform, d3.zoomIdentity);
+
+
+
+    function zoomed() {
+
+      let transform = d3.event.transform;
+
+
+      map.attr("transform", transform.toString() );
+
+
+
+      map.select(".country")
+      .style("stroke-width", 4 / transform.k);
+      map.select(".outline")
+      .style("stroke-width", 1 / transform.k);
+
+    }
+
+
+
+
+
+
+
+
+
+  };
+
+
+  requestInfo();
+
+
+  </script>
